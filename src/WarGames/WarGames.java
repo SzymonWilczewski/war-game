@@ -1,32 +1,49 @@
 package WarGames;
 
+import java.util.*;
+
 public class WarGames {
     public static void main(String[] args) throws Exception {
-        General generalHarris = new General("Harris", 100);
-        General generalZhukov = new General("Zhukov", 75);
+        System.out.print("Type \"s\" to save game or \"l\" to load game: ");
+        Scanner scan = new Scanner(System.in);
+        String choice = scan.nextLine();
+        System.out.println(choice);
 
-        Secretary secretary = new Secretary();
-        generalHarris.attach(secretary);
-        generalZhukov.attach(secretary);
+        if (choice.equals("s")) {
+            General generalHarris = new General("Harris", 100);
+            General generalZhukov = new General("Zhukov", 75);
 
-        generalHarris.buySoldier(1);
-        generalHarris.buySoldier(2);
-        generalHarris.buySoldier(3);
-        generalHarris.buySoldier(4);
+            Secretary secretary = new Secretary();
+            generalHarris.attach(secretary);
+            generalZhukov.attach(secretary);
 
-        generalZhukov.buySoldier(1);
-        generalZhukov.buySoldier(1);
-        generalZhukov.buySoldier(1);
-        generalZhukov.buySoldier(1);
-        generalZhukov.buySoldier(1);
-        generalZhukov.maneuvers();
-        generalZhukov.maneuvers();
-        generalZhukov.maneuvers();
+            generalHarris.buySoldier(1);
+            generalHarris.buySoldier(2);
+            generalHarris.buySoldier(3);
+            generalHarris.buySoldier(4);
 
-        generalHarris.attack(generalZhukov);
+            generalZhukov.buySoldier(1);
+            generalZhukov.buySoldier(1);
+            generalZhukov.buySoldier(1);
+            generalZhukov.buySoldier(1);
+            generalZhukov.buySoldier(1);
+            generalZhukov.maneuvers();
+            generalZhukov.maneuvers();
+            generalZhukov.maneuvers();
 
-        generalHarris.writeToFile();
-        generalZhukov.writeToFile();
-        generalHarris.readFromFile();
+            generalHarris.attack(generalZhukov);
+
+            System.out.println("Harris: Balance " + (int) generalHarris.getMoney());
+            System.out.println("Zhukov: Balance " + (int) generalZhukov.getMoney());
+
+            General.writeToFile(generalHarris);
+            General.writeToFile(generalZhukov);
+        } else if (choice.equals("l")) {
+            General generalHarris = General.readFromFile("Harris");
+            General generalZhukov = General.readFromFile("Zhukov");
+
+            System.out.println("Harris: Balance " + (int) generalHarris.getMoney());
+            System.out.println("Zhukov: Balance " + (int) generalZhukov.getMoney());
+        }
     }
 }

@@ -1,6 +1,8 @@
 package WarGames;
 
-public class Soldier {
+import java.io.*;
+
+public class Soldier implements Serializable {
     private int rank;
     private int experience;
 

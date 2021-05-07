@@ -4,6 +4,7 @@ import org.junit.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
 import java.util.*;
 
 public class GeneralTest {
@@ -47,19 +48,19 @@ public class GeneralTest {
     public void testManeuvers() {
         General general = new General("Harris", 100);
         general.buySoldier(1);
-        general.buySoldier(2);
+        general.buySoldier(1);
         general.maneuvers();
-        assertEquals(6, general.getSoldiers().stream().mapToDouble(Soldier::getStrength).sum());
+        assertEquals(4, general.getSoldiers().stream().mapToDouble(Soldier::getStrength).sum());
     }
 
     @Test
     public void testManeuversWithSpecifiedSoldiers() {
         General general = new General("Harris", 100);
         general.buySoldier(1);
-        general.buySoldier(2);
+        general.buySoldier(1);
         Soldier soldier = general.getSoldiers().iterator().next();
         general.maneuvers(new HashSet<>(Collections.singletonList(soldier)));
-        assertEquals(5, general.getSoldiers().stream().mapToDouble(Soldier::getStrength).sum());
+        assertEquals(3, general.getSoldiers().stream().mapToDouble(Soldier::getStrength).sum());
     }
 
     @Test
@@ -124,6 +125,25 @@ public class GeneralTest {
         General general = new General("Harris", 100);
         general.notify("test");
         assertEquals(2, general.getNews().size());
+    }
+
+    @Test
+    public void testWriteToFile() throws IOException, ClassNotFoundException {
+        General general = new General("TestWrite", 100);
+        general.buySoldier(1);
+        General.writeToFile(general);
+        General testGeneral = General.readFromFile("TestWrite");
+        assertEquals(90, testGeneral.getMoney());
+    }
+
+    @Test
+    public void testReadFromFile() throws IOException, ClassNotFoundException {
+        General general = new General("TestRead", 100);
+        general.buySoldier(1);
+        General.writeToFile(general);
+        general.buySoldier(1);
+        General testGeneral = General.readFromFile("TestRead");
+        assertEquals(90, testGeneral.getMoney());
     }
 
 }

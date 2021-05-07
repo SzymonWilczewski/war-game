@@ -1,11 +1,9 @@
 package WarGames;
 
 import java.util.*;
-import java.nio.file.*;
-import java.nio.charset.*;
 import java.io.*;
 
-public class General implements Observable {
+public class General implements Observable, Serializable {
     private final String name;
     private final HashSet<Soldier> soldiers = new HashSet<>();
     private double money;
@@ -30,7 +28,7 @@ public class General implements Observable {
 
     public void maneuvers() throws IllegalArgumentException {
         double cost = soldiers.stream().mapToDouble(Soldier::getRank).sum();
-        
+
         if (cost <= money) {
             soldiers.forEach(Soldier::gainExperience);
             soldiers.forEach(Soldier::promotion);
@@ -114,11 +112,21 @@ public class General implements Observable {
         notifyObservers();
     }
 
-    public void writeToFile() throws IOException {
-        Files.write(Paths.get(name + ".txt"), news, Charset.defaultCharset());
+    public static void writeToFile(General general) throws IOException {
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(general.name + ".ser"))) {
+            outputStream.writeObject(general);
+        } catch (IOException e) {
+            throw new IOException(e);
+        }
     }
 
-    public void readFromFile() throws IOException {
-        this.news = (ArrayList<String>) Files.readAllLines(Paths.get(name + ".txt"));
+    public static General readFromFile(String name) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(name + ".ser"))) {
+            return (General) inputStream.readObject();
+        } catch (IOException e) {
+            throw new IOException(e);
+        } catch (ClassNotFoundException e) {
+            throw new ClassNotFoundException(e.toString());
+        }
     }
 }

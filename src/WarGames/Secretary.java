@@ -1,8 +1,9 @@
 package WarGames;
 
 import java.util.*;
+import java.io.*;
 
-public class Secretary implements Observer {
+public class Secretary implements Observer, Serializable {
     @Override
     public void update(General general) {
         String name = general.getName();
